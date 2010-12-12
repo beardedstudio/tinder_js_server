@@ -1,0 +1,9 @@
+---
+  connection:
+    username: "username"
+    password: "password"
+    host: "localhost"
+    database: "fireplace"
+    adapter: "mysql"
+    port: 3306
+  
