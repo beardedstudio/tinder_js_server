@@ -43,6 +43,7 @@ exports.models = function() {
   User = persistence.define('User', {
     name: text,
     email_address: text,
+    auth_token: text,
     admin: bool,
     type: text,
     updated_at: datetime,

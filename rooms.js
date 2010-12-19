@@ -2,22 +2,18 @@ exports.routes = function() {
   
   // List all rooms
   app.get('/rooms', function(req, res){
-    session.transaction(function(tx) {
-      Room.all(session).limit(10).list(tx, function(rooms) {
-        collectJSON(tx, rooms, function(json_rooms){
-          // when data is collected, return to the client
-          res.send({ rooms: json_rooms });
-        })
-      });
+    Room.all(session).limit(10).list(tx, function(rooms) {
+      collectJSON(tx, rooms, function(json_rooms){
+        // when data is collected, return to the client
+        res.send({ rooms: json_rooms });
+      })
     });
   });
   
   // API Addition!
   // Add a new room
 //  app.post('/rooms', function(req, res){
-//    session.transaction(function(tx) {
-//      // TODO: add a room
-//    });
+//    // TODO: add a room
 //  });
 
   // List rooms the current user is in
@@ -33,22 +29,18 @@ exports.routes = function() {
 
   // Fetch a single room
   app.get('/room/:id', function(req, res){
-    session.transaction(function(tx) {
-      Room.load(session, tx, req.params.id, function(room){
-        room.selectJSON(tx, ['*'], function(item){
-          // TODO: real users list
-          res.send({ room: item, users: [  ] });
-        });
+    Room.load(session, tx, req.params.id, function(room){
+      room.selectJSON(tx, ['*'], function(item){
+        // TODO: real users list
+        res.send({ room: item, users: [  ] });
       });
-    })
+    });
   });
 
   // API Addition!
   // Delete a single room
 //  app.post('/room/:id/delete', function(req, res){
-//    session.transaction(function(tx) {
-//      // TODO: delete the room
-//    });
+//    // TODO: delete the room
 //  });
 
   // Add the current user to a room
