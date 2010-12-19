@@ -8,6 +8,9 @@ var db = yaml.eval(fs.readFileSync('./config/database.yml')+'').connection;
 persistenceStore.config(persistence, db.host, db.port, db.database, db.username, db.password);
 session = persistenceStore.getSession();
 
+// Utils
+util = require('./util')
+
 // Models, models, models!
 require('./models/models').models(persistence)
 
@@ -43,13 +46,13 @@ session.transaction(function(tx) {
   app.get('/', function(req, res){
     res.render('index.haml', {
       locals: {}
-    });
-  });
+    })
+  })
   
   // Other routes
-  require('./rooms').routes();
+  require('./rooms').routes()
 
 });
 
 
-app.listen(3000);
+app.listen(3000)
