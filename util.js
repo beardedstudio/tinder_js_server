@@ -19,3 +19,25 @@ exports.date_to_mysql_timestamp = function(date) {
 
   return date
 }
+
+exports.to_json = function(tx, object, callback) {
+  object.selectJSON(tx, ['*'], function(item){
+    callback(item)
+  })
+}
+
+exports.collect_json = function(tx, result, callback) {
+  json_collection = []
+  if (result.length == 0) {
+    callback(json_collection)
+  }
+  for (var i=0; i<result.length; i++) {
+    exports.to_json(tx, result[i], function(item){
+      json_collection.push(item)
+      // if this is the last, return the array
+      if (i == result.length-1) {
+        callback(json_collection)
+      }
+    })
+  }
+}

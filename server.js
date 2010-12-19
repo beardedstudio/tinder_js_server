@@ -24,9 +24,9 @@ app.set('view options', {
 // Because this app is so simple, everything should happen in the same transaction
 // But, we need a global placeholder for our single transaction
 tx = null
-session.transaction(function(tx) {
-  // Ugly! Make this transaction globally accessible:
-  tx = tx
+session.transaction(function(transaction) {
+  // Make this transaction globally accessible:
+  tx = transaction
 
   // Before each request, make sure we have a valid user
   app.all('*', function(req, res, next){
@@ -50,7 +50,7 @@ session.transaction(function(tx) {
   })
   
   // Other routes
-  require('./rooms').routes()
+  require('./api/rooms').routes()
 
 });
 

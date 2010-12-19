@@ -3,7 +3,7 @@ exports.routes = function() {
   // List all rooms
   app.get('/rooms', function(req, res){
     Room.all(session).limit(10).list(tx, function(rooms) {
-      collectJSON(tx, rooms, function(json_rooms){
+      util.collect_json(tx, rooms, function(json_rooms){
         // when data is collected, return to the client
         res.send({ rooms: json_rooms });
       })
@@ -20,7 +20,7 @@ exports.routes = function() {
   app.get('/presence', function(req, res){
     // TODO: filter by presence - this just lists all
     Room.all(session).limit(10).list(tx, function(rooms) {
-      collectJSON(tx, rooms, function(json_rooms){
+      util.collect_json(tx, rooms, function(json_rooms){
         // when data is collected, return to the client
         res.send({ rooms: json_rooms });
       })
@@ -30,9 +30,9 @@ exports.routes = function() {
   // Fetch a single room
   app.get('/room/:id', function(req, res){
     Room.load(session, tx, req.params.id, function(room){
-      room.selectJSON(tx, ['*'], function(item){
+      util.to_json(tx, room, function(room_json){
         // TODO: real users list
-        res.send({ room: item, users: [  ] });
+        res.send({ room: room_json, users: [  ] });
       });
     });
   });
@@ -96,26 +96,5 @@ exports.routes = function() {
     // get by id
     res.send({ upload: upload_example });
   });
-  
-  
-  // utility methods
-  
-  function collectJSON(tx, result, callback) {
-    json_collection = []
-    console.log(result.length)
-    if (result.length == 0) {
-      callback(json_collection)
-    }
-    for (var i=0; i<result.length; i++) {
-      result[i].selectJSON(tx, ['*'], function(item){
-        json_collection.push(item);
-        // if this is the last, return the array
-        if (i == result.length-1) {
-          callback(json_collection);
-        }
-      });
-    }
-  }
-
   
 }
