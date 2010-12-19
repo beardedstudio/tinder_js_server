@@ -11,6 +11,14 @@ exports.routes = function() {
       });
     });
   });
+  
+  // API Addition!
+  // Add a new room
+//  app.post('/rooms', function(req, res){
+//    session.transaction(function(tx) {
+//      // TODO: add a room
+//    });
+//  });
 
   // List rooms the current user is in
   app.get('/presence', function(req, res){
@@ -29,11 +37,19 @@ exports.routes = function() {
       Room.load(session, tx, req.params.id, function(room){
         room.selectJSON(tx, ['*'], function(item){
           // TODO: real users list
-          res.send({ room: item, users: [ example_user ] });
+          res.send({ room: item, users: [  ] });
         });
       });
     })
   });
+
+  // API Addition!
+  // Delete a single room
+//  app.post('/room/:id/delete', function(req, res){
+//    session.transaction(function(tx) {
+//      // TODO: delete the room
+//    });
+//  });
 
   // Add the current user to a room
   app.post('/room/:id/join', function(req, res){
@@ -94,6 +110,10 @@ exports.routes = function() {
   
   function collectJSON(tx, result, callback) {
     json_collection = []
+    console.log(result.length)
+    if (result.length == 0) {
+      callback(json_collection)
+    }
     for (var i=0; i<result.length; i++) {
       result[i].selectJSON(tx, ['*'], function(item){
         json_collection.push(item);
