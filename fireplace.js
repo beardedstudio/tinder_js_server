@@ -15,11 +15,15 @@ util = require('./util')
 require('./models/models').models(persistence)
 
 // Framework
-app = require('express').createServer();
+express = require('express')
+app = express.createServer();
 app.set('view options', {
   layout: false
 });
-
+// Decodes post variables
+app.use(express.bodyDecoder());
+// Allows use of _method in forms - probably not needed
+app.use(express.methodOverride());
 
 // We need a global placeholder for our single transaction
 tx = null

@@ -2,8 +2,19 @@ exports.routes = function(){
 
   // Post a new message to a room
   app.post('/room/:id/speak', function(req, res){
-    // create a new message and return its data
-    res.send("OK");
+    var date = util.date_to_mysql_timestamp()
+
+    message = new Message({
+      room_id: req.params.id, 
+      user_id: req.user.id,
+      type: req.body.type,
+      body: req.body.body,
+      // TODO: refactor to the model, somehow
+      updated_at: date,
+      created_at: date
+    })
+    session.add(message)
+    res.send("OK")
   });
 
   // Highlight a message
