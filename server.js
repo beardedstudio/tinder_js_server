@@ -32,6 +32,7 @@ session.transaction(function(transaction) {
   app.all('*', function(req, res, next){
     // TODO: use real auth_token
     var auth_token = 'XXXXXX'
+
     User.findBy(session, tx, 'auth_token', auth_token, function(user){
       req.user = user
       if (req.user) {
@@ -50,7 +51,10 @@ session.transaction(function(transaction) {
   })
   
   // Other routes
+  require('./api/messages').routes()
   require('./api/rooms').routes()
+  require('./api/users').routes()
+  require('./api/streaming').routes()
 
 });
 

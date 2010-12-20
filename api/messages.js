@@ -13,7 +13,7 @@ exports.routes = function(){
   });
 
   // Un-highlight a message
-  app.delete('/messages/:id/star', function(req, res){
+  app.del('/messages/:id/star', function(req, res){
     // make a message un-starred
     res.send("OK");
   });
