@@ -21,42 +21,51 @@ app.set('view options', {
 });
 
 
-// Because this app is so simple, everything should happen in the same transaction
-// But, we need a global placeholder for our single transaction
+// We need a global placeholder for our single transaction
 tx = null
-session.transaction(function(transaction) {
-  // Make this transaction globally accessible:
-  tx = transaction
 
-  // Before each request, make sure we have a valid user
-  app.all('*', function(req, res, next){
-    // TODO: use real auth_token
-    var auth_token = 'XXXXXX'
+// With each request
+app.all('*', function(req, res, next){
+  // TODO: use real auth_token
+  var auth_token = 'XXXXXX'
 
+  // Because this app is so simple, everything should happen in the same transaction
+  session.transaction(function(transaction) {
+    // Make this transaction globally accessible:
+    tx = transaction
+
+    // Make sure we have a valid user
     User.findBy(session, tx, 'auth_token', auth_token, function(user){
       req.user = user
       if (req.user) {
         next()
+
+        // Flush all database changes in this transaction
+        session.flush(tx, function() {
+          // console.log('Done flushing!')
+        });
+
       } else {
         next(new Error('cannot find user for ' + auth_token))
       }
     })
-  })
   
-  // Root route
-  app.get('/', function(req, res){
-    res.render('index.haml', {
-      locals: {}
-    })
-  })
-  
-  // Other routes
-  require('./api/messages').routes()
-  require('./api/rooms').routes()
-  require('./api/users').routes()
-  require('./api/streaming').routes()
+  });
 
-});
+})
+
+// Root route
+app.get('/', function(req, res){
+  res.render('index.haml', {
+    locals: {}
+  })
+})
+
+// Other routes
+require('./api/messages').routes()
+require('./api/rooms').routes()
+require('./api/users').routes()
+require('./api/streaming').routes()
 
 
 app.listen(3000)
