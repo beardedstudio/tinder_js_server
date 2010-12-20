@@ -11,7 +11,6 @@ exports.routes = function(){
   app.get('/users/:id', function(req, res){
     User.load(session, tx, req.params.id, function(user){
       util.to_json(tx, user, function(json_user){
-        // TODO: real users list
         res.send({ user: json_user });
       });
     });
