@@ -9,14 +9,14 @@ exports.migrate = function() {
       });
     },
     down: function() {
-      this.dropTable('Task');
+      this.dropTable('Task')
     }
   });
-
-  persistence.migrations.init(function() {
   
-  });
+  console.log(persistence.migrations)
 
-  persistence.migrate();
+  persistence.migrations.init()
+
+  persistence.migrate(function(){})
 
 }
